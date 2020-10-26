@@ -60,60 +60,66 @@ public class VendaDAO {
         
         con.close();
     }
-    public void remover(Entradas entrada) throws Exception{
+    public void remover(Venda venda) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "delete from entradas where codigo = ?";
+        sql = "delete from CLIENTES_COMPRA_PRODUTOS  where codigo = ?";
         
         st = con.prepareStatement(sql);
         
-        st.setInt(1, entrada.getCodigo());
+        st.setInt(1, venda.getCodigo());
         
         st.executeUpdate();
         
         con.close();
     }
-    public List<Entradas> listar() throws Exception{
-        List<Entradas> entradas = new ArrayList<>();
+    public List<Venda> listar() throws Exception{
+        List<Venda> venda = new ArrayList<>();
         con = ConnectionFactory.getConnection();
-        sql = "select * from entradas";
+        sql = "select * from CLIENTES_COMPRA_PRODUTOS";
         st = con.prepareStatement(sql);
         ResultSet rs = st.executeQuery();
         while(rs.next()){
             int codigo = rs.getInt(1);
             Date data = rs.getDate("data");
             float valor = rs.getFloat("valor");
+            int cod_produto = rs.getInt("Codigo_produto_PRODUTOS");
+            int cod_cliente = rs.getInt("Codigo_cliente_CLIENTES");
             
             
-            Entradas e = new Entradas();
+            Venda v = new Venda();
             
-            e.setCodigo(codigo);
-            e.setValor(valor);
-            e.setData(data);
+            v.setCodigo(codigo);
+            v.setValor(valor);
+            v.setData((java.sql.Date) data);
+            v.setCod_produto(cod_produto);
+            v.setCod_cliente(cod_cliente);
             
-            
-           entradas.add(e);
+           venda.add(v);
         }
         con.close();
-        return entradas;
+        return venda;
     }
     
-        public Entradas buscar(int codigo) throws Exception{
-        Entradas e = null;
+        public Venda buscar(int codigo) throws Exception{
+        Venda v = null;
         con = ConnectionFactory.getConnection();
-        sql = "select * from entradas where codigo = ?";
+        sql = "select * from CLIENTES_COMPRA_PRODUTOS where codigo = ?";
         st = con.prepareStatement(sql);
         st.setInt(1, codigo);
         ResultSet rs = st.executeQuery();
         if(rs.next()){
-            int valor = rs.getInt("valor");
+            float valor = rs.getFloat("valor");
             Date data = rs.getDate("data");
-            e = new Entradas();
-            e.setCodigo(codigo);
-            e.setValor(valor);
-            e.setData(data);
+            int cod_produto = rs.getInt("Codigo_produto_PRODUTOS");
+            int cod_cliente = rs.getInt("Codigo_cliente_CLIENTES");
+
+            v.setValor(valor);
+            v.setData((java.sql.Date) data);
+            v.setCod_produto(cod_produto);
+            v.setCod_cliente(cod_cliente);
         }
         con.close();
-        return e;
+        return v;
     }   
 }
