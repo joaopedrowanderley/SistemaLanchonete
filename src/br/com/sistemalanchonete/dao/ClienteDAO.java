@@ -28,7 +28,9 @@ public class ClienteDAO {
     public void inserir(Cliente cliente) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "insert into endereco (rua, bairro, cidade, referencia, numero) values (?,?,?,?,?)";
+        sql = "INSERT INTO \"LANCHONETE\".\"ENDERECO\"(\n" + 
+        		"   \"Rua\", \"Bairro\", \"Cidade\", \"Referencia\", \"Numero\")\n" + 
+        		"	VALUES (?, ?, ?, ?, ?);";
         
         // informa ao jdbc que o codigo gerado deverá ser retornado
         st = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -49,7 +51,9 @@ public class ClienteDAO {
             codigoEndereco = rs.getInt(1);
         }
         
-        sql = "insert into clientes ( nome, telefone,cod_endereco) values (?,?,?)";
+        sql = "INSERT INTO \"LANCHONETE\".\"CLIENTES\"(\n" + 
+        		"	\"Nome_cliente\", \"Telefone\", \"Cod_endereco\")\n" + 
+        		"	VALUES (?, ?, ?);";
         
         st = con.prepareStatement(sql);
         
@@ -65,7 +69,9 @@ public class ClienteDAO {
     public void editar(Cliente cliente) throws Exception{
       con = ConnectionFactory.getConnection();
         
-        sql = " update endereco set rua = ?, bairro = ?, cidade = ?,  referencia = ?, numero = ?  where codigo_endereco = ? ";
+        sql = " UPDATE \"LANCHONETE\".\"ENDERECO\"\n" + 
+        		"	SET  \"Rua\"=?, \"Bairro\"=?, \"Cidade\"=?, \"Referencia\"=?, \"Numero\"=?\n" + 
+        		"	WHERE \"Codigo_endereco\"=?; ";
         
        
         st = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -87,7 +93,9 @@ public class ClienteDAO {
             codigoEndereco = rs.getInt(1);
         }
         
-        sql = "insert into clientes ( nome, telefone,cod_endereco) values (?,?,?)";
+        sql = "UPDATE \"LANCHONETE\".\"CLIENTES\"\n" + 
+        		"	SET \"Nome_cliente\"=?, \"Telefone\"=?, \"Cod_endereco\"=?\n" + 
+        		"	WHERE \"Codigo_cliente\"=?;";
         
         st = con.prepareStatement(sql);
         
@@ -103,7 +111,8 @@ public class ClienteDAO {
     public void remover(Cliente cliente) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "delete from clientes where codigo = ?";
+        sql = "DELETE FROM \"LANCHONETE\".\"CLIENTES\"\n" + 
+        		"	WHERE \"Codigo_cliente\"=?;";
         
         st = con.prepareStatement(sql);
         
@@ -116,19 +125,20 @@ public class ClienteDAO {
     public List<Cliente> listar() throws Exception{
         List<Cliente> filial = new ArrayList<>();
         con = ConnectionFactory.getConnection();
-        sql = "select c.*, e.* from clientes c, endereco e where c.cod_endereco = e.codigo";
+        sql = "select * from \"LANCHONETE\".\"CLIENTES\" c, \"LANCHONETE\".\"ENDERECO\" e \n" + 
+        		"where c.\"Cod_endereco\" = e.\"Codigo_endereco\"";
         st = con.prepareStatement(sql);
         ResultSet rs = st.executeQuery();
         while(rs.next()){
-            int codigo = rs.getInt(1);
-             String nome  = rs.getString("nome");
-            String  telefone  = rs.getString("telefone");
-            String rua = rs.getString("rua");
-            String bairro = rs.getString("bairro");
-            String cidade = rs.getString("cidade");
-            String referencia = rs.getString("referencia");
-            int numero = rs.getInt("numero");
-            int codigoEndereco = rs.getInt("codigo_endereco");
+            int codigo = rs.getInt("Codigo_cliente");
+            String nome  = rs.getString("Nome_cliente");
+            String  telefone  = rs.getString("Telefone");
+            String rua = rs.getString("Rua");
+            String bairro = rs.getString("Bairro");
+            String cidade = rs.getString("Cidade");
+            String referencia = rs.getString("Referencia");
+            int numero = rs.getInt("Numero");
+            int codigoEndereco = rs.getInt("Codigo_endereco");
             
             Cliente c = new Cliente();
             
@@ -151,19 +161,20 @@ public class ClienteDAO {
         public Cliente buscar(int codigo) throws Exception{
         Cliente c = null;
         con = ConnectionFactory.getConnection();
-        sql = "select * from clientes where codigo = ?";
+        sql = "select * from \"LANCHONETE\".\"CLIENTES\" c, \"LANCHONETE\".\"ENDERECO\" e \n" + 
+        		"where c.\"Cod_endereco\" = e.\"Codigo_endereco\" and c.\"Codigo_cliente\" = ?";
         st = con.prepareStatement(sql);
         st.setInt(1, codigo);
         ResultSet rs = st.executeQuery();
         if(rs.next()){
-            String nome  = rs.getString("nome");
-            String  telefone  = rs.getString("telefone");
-            String rua = rs.getString("rua");
-            String bairro = rs.getString("bairro");
-            String cidade = rs.getString("cidade");
-            String referencia = rs.getString("referencia");
-            int numero = rs.getInt("numero");
-            int codigoEndereco = rs.getInt("codigo_endereco");
+        	String nome  = rs.getString("Nome_cliente");
+            String  telefone  = rs.getString("Telefone");
+            String rua = rs.getString("Rua");
+            String bairro = rs.getString("Bairro");
+            String cidade = rs.getString("Cidade");
+            String referencia = rs.getString("Referencia");
+            int numero = rs.getInt("Numero");
+            int codigoEndereco = rs.getInt("Codigo_endereco");
             
              c = new Cliente();
             
