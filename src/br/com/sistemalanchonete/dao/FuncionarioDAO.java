@@ -26,7 +26,9 @@ public class FuncionarioDAO {
     public void inserir(Funcionario funcionario) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "insert into funcionarios ( nome, salario, supervisor) values (?,?,?)";
+        sql = "INSERT INTO \"LANCHONETE\".\"FUNCIONARIOS\"(\n" + 
+        		"   \"Nome_funcionario\", \"Salario_funcionario\", \"Supervisor\")\n" + 
+        		"	VALUES ( ?, ?, ?);";
         
         st = con.prepareStatement(sql);
         
@@ -41,7 +43,9 @@ public class FuncionarioDAO {
     public void editar(Funcionario funcionario) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "update funcionarios set  nome = ?, salario = ?, supervisor = ?  where codigo = ?";
+        sql = "UPDATE \"LANCHONETE\".\"FUNCIONARIOS\"\n" + 
+        		"	SET  \"Nome_funcionario\"=?, \"Salario_funcionario\"=?, \"Supervisor\"=?\n" + 
+        		"	WHERE \"Codigo_funcionario\"=?";
         
         st = con.prepareStatement(sql);
         
@@ -56,7 +60,8 @@ public class FuncionarioDAO {
     public void remover(Funcionario funcionario) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "delete from funcionarios where codigo = ?";
+        sql = "DELETE FROM \"LANCHONETE\".\"FUNCIONARIOS\"\n" + 
+        		"	WHERE  \"Codigo_funcionario\"=?";
         
         st = con.prepareStatement(sql);
         
@@ -69,7 +74,7 @@ public class FuncionarioDAO {
     public List<Funcionario> listar() throws Exception{
         List<Funcionario> funcionario = new ArrayList<>();
         con = ConnectionFactory.getConnection();
-        sql = "select * from funcionarios";
+        sql = "select * from \"LANCHONETE\".\"FUNCIONARIOS\"";
         st = con.prepareStatement(sql);
         ResultSet rs = st.executeQuery();
         while(rs.next()){
@@ -95,7 +100,7 @@ public class FuncionarioDAO {
         public Funcionario buscar(int codigo) throws Exception{
         Funcionario f = null;
         con = ConnectionFactory.getConnection();
-        sql = "select * from funcionario where codigo = ?";
+        sql = "select * from \"LANCHONETE\".\"FUNCIONARIOS\" where \"Codigo_funcionario\"=?\" ";
         st = con.prepareStatement(sql);
         st.setInt(1, codigo);
         ResultSet rs = st.executeQuery();
