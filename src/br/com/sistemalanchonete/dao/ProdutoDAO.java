@@ -26,7 +26,9 @@ public class ProdutoDAO {
     public void inserir(Produto produto) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "insert into produtos ( nome, valor, qtd_produtos) values (?,?,?)";
+        sql = "INSERT INTO \"LANCHONETE\".\"PRODUTOS\"(\n" + 
+        		"   \"Nome\", \"Valor\")\n" + 
+        		"	VALUES ( ?, ?);";
         
         st = con.prepareStatement(sql);
         
@@ -36,7 +38,7 @@ public class ProdutoDAO {
         
         st.setFloat(2, produto.getValor());
         
-        st.setInt(3, produto.getQuantidade());
+        
  
         
         st.executeUpdate();
@@ -47,7 +49,9 @@ public class ProdutoDAO {
     public void editar(Produto produto) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "update produtos set  nome = ?, valor = ?, qtd produtos = ?  where codigo = ?";
+        sql = "UPDATE \"LANCHONETE\".\"PRODUTOS\"\n" + 
+        		"	SET \"Nome\"=?, \"Valor\"=?\n" + 
+        		"	WHERE \"Codigo_produto\"=?;";
         
         st = con.prepareStatement(sql);
         
@@ -65,7 +69,8 @@ public class ProdutoDAO {
     public void remover(Produto produto) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "delete from produtos where codigo = ?";
+        sql = "DELETE FROM \"LANCHONETE\".\"PRODUTOS\"\n" + 
+        		"	WHERE \"Codigo_produto\"=?;";
         
         st = con.prepareStatement(sql);
         
@@ -79,14 +84,14 @@ public class ProdutoDAO {
     public List<Produto> listar() throws Exception{
         List<Produto> produto = new ArrayList<>();
         con = ConnectionFactory.getConnection();
-        sql = "select * from produtos";
+        sql = "select * from \"LANCHONETE\".\"PRODUTOS\"";
         st = con.prepareStatement(sql);
         ResultSet rs = st.executeQuery();
         while(rs.next()){
             int codigo = rs.getInt(1);
-            String nome = rs.getString("nome");
-            float valor = rs.getFloat("valor");
-            int quantidade = rs.getInt("quantidade");
+            String nome = rs.getString("Nome");
+            float valor = rs.getFloat("Valor");
+           
             
             
             Produto p = new Produto();
@@ -94,7 +99,7 @@ public class ProdutoDAO {
             p.setCodigo(codigo);
             p.setNome(nome);
             p.setValor(valor);
-            p.setQuantidade(quantidade);
+            
             
             
            produto.add(p);
@@ -106,18 +111,19 @@ public class ProdutoDAO {
     public Produto buscar(int codigo) throws Exception{
         Produto p = null;
         con = ConnectionFactory.getConnection();
-        sql = "select * from produtos where codigo = ?";
+        sql = "select * from \"LANCHONETE\".\"PRODUTOS\" where \"Codigo_produto\" = ?";
         st = con.prepareStatement(sql);
         st.setInt(1, codigo);
         ResultSet rs = st.executeQuery();
         if(rs.next()){
-            String nome = rs.getString("nome");
-            float valor = rs.getFloat("valor");
-            int quantidade = rs.getInt("quantidade");
+        	 String nome = rs.getString("Nome");
+             float valor = rs.getFloat("Valor");
+            
             p = new Produto();
             p.setCodigo(codigo);
+            p.setNome(nome);
             p.setValor(valor);
-            p.setQuantidade(quantidade);
+          
         }
         con.close();
         return p;
