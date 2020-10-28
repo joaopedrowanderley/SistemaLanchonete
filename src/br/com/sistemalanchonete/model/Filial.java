@@ -13,6 +13,7 @@ public class Filial {
     private int codigo;
     private String nome;
     private String telefone;
+    private Integer cnpj;
     private Endereco endereco;
     private int cod_gerente;
 
@@ -65,8 +66,18 @@ public class Filial {
                 .append(" - ")
                 .append(endereco)
                 .append(" - ")
+                .append(cnpj)
+                .append(" - ")
                 .append(cod_gerente);
         return sb.toString();
-    }    
+    }
+
+	public Integer getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(Integer cnpj) {
+		this.cnpj = cnpj;
+	}    
     
 }
