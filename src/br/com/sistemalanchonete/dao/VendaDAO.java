@@ -27,14 +27,17 @@ public class VendaDAO {
     public void inserir(Venda venda) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "insert into CLIENTES_COMPRA_PRODUTOS ( Valor, Data_compra,Codigo_cliente_CLIENTES, Codigo_produto_PRODUTOS) values (?,?,?,?)";
+        sql = "INSERT INTO \"LANCHONETE\".\"CLIENTES_COMPRA_PRODUTOS\"(\n" + 
+        		"	 \"Data_compra\", \"Valor\", \"Codigo_cliente_CLIENTES\", \"Codigo_produto_PRODUTOS\")\n" + 
+        		"	VALUES ( ?, (select \"Valor\" from \"LANCHONETE\".\"PRODUTOS\" \n" + 
+        		"							  WHERE \"Codigo_produto\" = ?), ?, ?);";
         
         st = con.prepareStatement(sql);
         
     
-        st.setFloat(1,venda.getValor());
         java.sql.Date dataSql = new java.sql.Date(venda.getData().getTime());
-        st.setDate(2, dataSql);
+        st.setDate(1, dataSql);
+        st.setFloat(2,venda.getCod_produto());
         st.setInt(3, venda.getCod_cliente());
         st.setInt(4, venda.getCod_produto());
         
@@ -45,16 +48,18 @@ public class VendaDAO {
     public void editar(Venda venda) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "insert into CLIENTES_COMPRA_PRODUTOS ( Valor, Data_compra,Codigo_cliente_CLIENTES, Codigo_produto_PRODUTOS) values (?,?,?,?)";
+        sql = "UPDATE \"LANCHONETE\".\"CLIENTES_COMPRA_PRODUTOS\"\n" + 
+        		"	SET \"Data_compra\"=?, \"Valor\"=?, \"Codigo_cliente_CLIENTES\"=?, \"Codigo_produto_PRODUTOS\"=?\n" + 
+        		"	WHERE id=?;";
         
         st = con.prepareStatement(sql);
         
-    
-        st.setFloat(1,venda.getValor());
         java.sql.Date dataSql = new java.sql.Date(venda.getData().getTime());
-        st.setDate(2, dataSql);
+        st.setDate(1, dataSql);
+        st.setFloat(2,venda.getValor());
         st.setInt(3, venda.getCod_cliente());
         st.setInt(4, venda.getCod_produto());
+        st.setInt(5, venda.getCodigo());
         
         st.executeUpdate();
         
@@ -63,7 +68,8 @@ public class VendaDAO {
     public void remover(Venda venda) throws Exception{
         con = ConnectionFactory.getConnection();
         
-        sql = "delete from CLIENTES_COMPRA_PRODUTOS  where codigo = ?";
+        sql = "DELETE FROM \"LANCHONETE\".\"CLIENTES_COMPRA_PRODUTOS\"\n" + 
+        		"	WHERE id=? ;";
         
         st = con.prepareStatement(sql);
         
@@ -76,13 +82,13 @@ public class VendaDAO {
     public List<Venda> listar() throws Exception{
         List<Venda> venda = new ArrayList<>();
         con = ConnectionFactory.getConnection();
-        sql = "select * from CLIENTES_COMPRA_PRODUTOS";
+        sql = "SELECT *	FROM \"LANCHONETE\".\"CLIENTES_COMPRA_PRODUTOS\";";
         st = con.prepareStatement(sql);
         ResultSet rs = st.executeQuery();
         while(rs.next()){
             int codigo = rs.getInt(1);
-            Date data = rs.getDate("data");
-            float valor = rs.getFloat("valor");
+            Date data = rs.getDate("Data_compra");
+            float valor = rs.getFloat("Valor");
             int cod_produto = rs.getInt("Codigo_produto_PRODUTOS");
             int cod_cliente = rs.getInt("Codigo_cliente_CLIENTES");
             
@@ -104,13 +110,13 @@ public class VendaDAO {
         public Venda buscar(int codigo) throws Exception{
         Venda v = null;
         con = ConnectionFactory.getConnection();
-        sql = "select * from CLIENTES_COMPRA_PRODUTOS where codigo = ?";
+        sql = "SELECT *	FROM \"LANCHONETE\".\"CLIENTES_COMPRA_PRODUTOS\" where id=?;";
         st = con.prepareStatement(sql);
         st.setInt(1, codigo);
         ResultSet rs = st.executeQuery();
         if(rs.next()){
-            float valor = rs.getFloat("valor");
-            Date data = rs.getDate("data");
+            float valor = rs.getFloat("Valor");
+            Date data = rs.getDate("Data_compra");
             int cod_produto = rs.getInt("Codigo_produto_PRODUTOS");
             int cod_cliente = rs.getInt("Codigo_cliente_CLIENTES");
 
